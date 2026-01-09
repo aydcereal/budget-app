@@ -3,9 +3,15 @@ import { useState } from "react";
 import { debts } from "@/types/debt";
 import Modal from "@/components/Modal";
 
+
 export default function Debts() {
 const [debtList, setDebtList] = useState(debts);
 const [open, setOpen] = useState(false);
+
+function handleAddDebt(newDebt: any){
+      setDebtList((prev)=> [...prev, newDebt]);
+      setOpen(false);
+    }
 
   return (
     <div>
@@ -27,12 +33,12 @@ const [open, setOpen] = useState(false);
         </tr>
       </thead>
       <tbody>
-        {debts.map((debtList)=>(
-          <tr key={debtList.id} className="bg-primary-accent/10 border-b-2 text-primary-text border-gray-400">
-            <td className="p-2 ">{debtList.name}</td>
-            <td className="p-2 text-center">${debtList.balance}</td>
-            <td className="p-2 text-center">{debtList.apr}%</td>
-            <td className="p-2 text-center">${debtList.minPayment}</td>
+        {debtList.map((debt)=>(
+          <tr key={debt.id} className="bg-primary-accent/10 border-b-2 text-primary-text border-gray-400">
+            <td className="p-2 ">{debt.name}</td>
+            <td className="p-2 text-center">${debt.balance}</td>
+            <td className="p-2 text-center">{debt.apr}%</td>
+            <td className="p-2 text-center">${debt.minPayment}</td>
             <td className="p-2 text-center space-x-2">
                 <button className=" hover:underline">
                   Edit
@@ -48,23 +54,56 @@ const [open, setOpen] = useState(false);
     <Modal
       open={open}
       title="Add New Debt"
-      onClose={()=> setOpen(false)}>
+      onClose={()=> setOpen(false)}
+      >
 
-        <AddDebtForm onCancel={()=> setOpen(false)}/>
+        <AddDebtForm onCancel={()=> setOpen(false)} onSave={handleAddDebt}/>
       </Modal>
     
     </div>
   );
+
+  
 }
 
-function AddDebtForm({ onCancel }: { onCancel: () => void }) {
+function AddDebtForm({ 
+  onCancel, onSave, 
+}: { 
+  onCancel: () => void;
+  onSave: (debt: any) => void; 
+}) {
+  const [form, setForm] = useState({
+    name:"",
+    balance: "",
+    apr:"", 
+    minPayment:"",
+  })
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>){
+    setForm({
+      ...form, 
+      [e.target.name]: e.target.value,
+    })
+  }
+  function handleSubmit(e: React.FormEvent){
+    e.preventDefault();
+
+    console.log(form.name,Number(form.balance), Number(form.apr),Number(form.minPayment) )
+    onSave({
+      id: crypto.randomUUID(),
+      name: form.name,
+      balance: Number(form.balance),
+      apr: Number(form.apr),
+      minPayment: Number(form.minPayment),
+    })
+  }
+  
   return (
     <form className="space-y-4">
       <div>
         <label className="block text-sm text-secondary-text mb-1">
           Debt Name
         </label>
-        <input className="bg-gray-100 border-black text-black w-full rounded border p-2" />
+        <input name="name" value={form.name} onChange={handleChange} className="bg-gray-100 border-black text-black w-full rounded border p-2" />
       </div>
 
       <div className="grid grid-cols-2 gap-3">
@@ -72,14 +111,14 @@ function AddDebtForm({ onCancel }: { onCancel: () => void }) {
           <label className="block text-sm text-secondary-text mb-1">
             Balance
           </label>
-          <input className="bg-gray-100 border-black text-black w-full rounded border p-2" />
+          <input name="balance" value={form.balance} onChange={handleChange} className="bg-gray-100 border-black text-black w-full rounded border p-2" />
         </div>
 
         <div>
           <label className="block text-sm text-secondary-text mb-1">
             APR %
           </label>
-          <input className="bg-gray-100 border-black text-black w-full rounded border p-2" />
+          <input name="apr" value={form.apr} onChange={handleChange} className="bg-gray-100 border-black text-black w-full rounded border p-2" />
         </div>
       </div>
 
@@ -87,7 +126,7 @@ function AddDebtForm({ onCancel }: { onCancel: () => void }) {
         <label className="block text-sm text-secondary-text mb-1">
           Min Payment
         </label>
-        <input className="bg-gray-100 border-black text-black w-full rounded border p-2" />
+        <input name="minPayment" value={form.minPayment} onChange={handleChange} className="bg-gray-100 border-black text-black w-full rounded border p-2" />
       </div>
 
       <div className="flex justify-end gap-2 pt-2">
@@ -101,6 +140,7 @@ function AddDebtForm({ onCancel }: { onCancel: () => void }) {
 
         <button
           type="submit"
+          onClick={handleSubmit}
           className="rounded bg-primary-accent px-4 py-2 text-foreground"
         >
           Save
