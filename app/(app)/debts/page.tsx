@@ -87,7 +87,7 @@ function AddDebtForm({
   function handleSubmit(e: React.FormEvent){
     e.preventDefault();
 
-    console.log(form.name,Number(form.balance), Number(form.apr),Number(form.minPayment) )
+    
     onSave({
       id: crypto.randomUUID(),
       name: form.name,

@@ -1,6 +1,9 @@
 import Image from "next/image";
+import { supabase } from "@/lib/supaBaseClient";
 
 export default function Home() {
+
+
   return (
     <div className="flex flex-col">
         <h1 className="text-2xl text-left text-black font-bold text-center mx-20">Dashboard</h1>

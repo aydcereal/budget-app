@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function Sidebar(){
     return(
-        <aside className="w-64 text-white p-6 space-y-4">
+        <aside className="w-64 shrink-0 text-white p-6 space-y-4">
             <h1 className="text-2xl font-bold mb-6 font-main">DebtBuddy</h1>
             <nav className="flex flex-col gap-4 ">
                 <Link href="/dashboard" className="flex p-1 text-[var(--color-foreground)] hover:text-[var(--color-primary-accent)]">

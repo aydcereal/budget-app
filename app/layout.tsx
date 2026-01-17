@@ -1,20 +1,19 @@
 import type { Metadata } from "next";
 import { Inter, Roboto } from "next/font/google";
 import "./globals.css";
-import Sidebar from "@/components/Sidebar";
 
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
-  display: 'swap'
+  display: "swap",
 });
 
 const roboto = Roboto({
   variable: "--font-roboto",
   subsets: ["latin"],
-})
-
-
+  display: "swap",
+  weight: ["400", "700"],
+});
 
 export const metadata: Metadata = {
   title: "DebtBuddy",
@@ -23,9 +22,9 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en">
       <head>
@@ -33,19 +32,9 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
           rel="stylesheet"
         />
-
-        
       </head>
-      <body
-        className={`${inter.variable} ${roboto.variable} antialiased`}
-      >
-        <div className="flex min-h-screen font-main">
-          <Sidebar/>
-          <main className="flex-1 bg-gray-100 p-6">
-            {children}
-          </main>
-        </div>
-        
+      <body className={`${inter.variable} ${roboto.variable} antialiased`}>
+        {children}
       </body>
     </html>
   );
