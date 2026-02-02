@@ -1,6 +1,20 @@
+'use client'
 import Link from "next/link";
+import { supabase } from "@/lib/supabase/supaBaseClient";
+import { useRouter } from "next/navigation";
 
 export default function Sidebar(){
+
+  
+    const router = useRouter();
+
+    const handleSignOut = async ()=>{
+        await supabase.auth.signOut();
+        router.refresh()
+    }
+    
+
+
     return(
         <aside className="w-64 shrink-0 text-white p-6 space-y-4">
             <h1 className="text-2xl font-bold mb-6 font-main">DebtBuddy</h1>
@@ -27,6 +41,7 @@ export default function Sidebar(){
                 <Link href="/settings" className="flex p-1 text-[var(--color-foreground)] hover:text-[var(--color-primary-accent)]">
                 <span className="material-symbols-outlined px-2">settings</span>
                 Settings</Link>
+                <button className="flex p-1 text-[var(--color-foreground)] hover:text-[var(--color-primary-accent)]" onClick={handleSignOut}>Sign Out</button>
             </nav>
 
         </aside>

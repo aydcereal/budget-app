@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { useState } from "react";
 
 type ModalProps ={
     open: boolean;
@@ -10,6 +11,7 @@ type ModalProps ={
 }
 
 export default function Modal({open, title, onClose, children}: ModalProps) {
+
     useEffect   (()=>{
 
         if(!open) return;
@@ -38,6 +40,7 @@ export default function Modal({open, title, onClose, children}: ModalProps) {
              <div className="relative w-full max-w-lg rounded-lg bg-white p-6 shadow-lg">
                 <div className="mb-4 flex items-start justify-between gap-4">
                     <h2 className="text-xl text-secondary-text font-semibold">{title ?? "Modal  "}</h2>
+                    <button></button>
                     <button 
                       onClick={onClose}
                       className="rounded px-2 py-1 text-gray-500 hover:bg-gray-100 hover:text-gray-800"
