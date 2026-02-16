@@ -31,7 +31,7 @@ const [loading, setLoading] = useState(true);
 const [open, setOpen] = useState(false);
 const [error, setError] = useState<string | null>(null);
 
-useEffect(()=>{
+  useEffect(()=>{
     const loadDebts = async () =>{
       setLoading(true);
       setError(null);
@@ -82,6 +82,20 @@ useEffect(()=>{
 
     setDebtList((prev)=> prev.filter((d)=> d.id !== id))
   }
+
+
+const debtSummary = debtList.reduce((acc, debt) => {
+  acc.totalBalance += Number(debt.balance);
+  acc.totalAPR += Number(debt.apr);
+  acc.totalPayments += Number(debt.min_payment);
+  acc.count += 1;
+  return acc; 
+},{totalBalance: 0, totalAPR: 0, count:0,totalPayments: 0 });
+
+
+
+const averageAPR = debtSummary.count > 0 ? (debtSummary.totalAPR / debtSummary.count).toFixed(2) : 0; 
+
 
 
 
@@ -136,6 +150,8 @@ async function handleAddDebt(debt: saveData){
     return data;
     
     }
+
+    
     
   }
 
@@ -157,7 +173,7 @@ async function handleAddDebt(debt: saveData){
           <th className="p-3 text-left">Name</th>
           <th className="p-2 text-left">Balance</th>
           <th className="p-2 text-left">APR</th>
-          <th className="p-2 text-left">Min Payment</th>
+          <th className="p-2 text-center">Min Payment</th>
           <th className="p-2 text-center">Edit/Delete</th>
         </tr>
       </thead>
@@ -167,7 +183,7 @@ async function handleAddDebt(debt: saveData){
             <td className="p-2 ">{debt.name}</td>
             <td className="p-2 ">{formatCurrency(debt.balance)}</td>
             <td className="p-2 text-left">{debt.apr}%</td>
-            <td className="p-2 text-left">{formatCurrency(debt.min_payment)}</td>
+            <td className="p-2 text-center">{formatCurrency(debt.min_payment)}</td>
             <td className="p-2 text-center space-x-2">
                 <button 
                   onClick={()=> {
@@ -183,7 +199,17 @@ async function handleAddDebt(debt: saveData){
 
           </tr>
         ))}
+        
       </tbody>
+      <tfoot>
+        <tr className="bg-primary-accent/10 border-b-2 text-primary-text border-gray-400">
+          <th className="p-3 text-left">Total</th>
+          <th className="p-2 text-left">{formatCurrency(debtSummary.totalBalance)}</th>
+          <th className="p-2 text-left">{averageAPR}%</th>
+          <th className="p-2 text-center">{formatCurrency(debtSummary.totalPayments)}</th>
+          <th className="p-2 text-center"></th>
+        </tr>
+      </tfoot>
     </table>
     </div>
     <Modal
